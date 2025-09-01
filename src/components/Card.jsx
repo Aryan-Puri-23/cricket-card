@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import useSound from "../hooks/useSound";
 
-
 const tierStyles = {
     Common: "from-gray-800 via-gray-700 to-gray-600 border-gray-400 shadow-md",
     Rare: "from-blue-800 via-blue-600 to-blue-500 border-blue-300 shadow-lg shadow-blue-500/40",
@@ -22,13 +21,13 @@ export default function Card({ player, revealed, onClick, disabled }) {
         <div className="w-40 sm:w-52 h-[21rem] perspective cursor-pointer">
             <motion.div
                 className="relative w-full h-full rounded-2xl border-white"
-                initial={{ rotateY: 180 }}
+                initial={{ rotateY: 0 }}
                 animate={{
-                    rotateY: revealed ? 0 : 180,
+                    rotateY: revealed ? 180 : 0,
                     scale:
                         revealed && player.tier === "Legend" ? 1.05 :
-                            revealed && player.tier === "Epic" ? 1.03 :
-                                revealed && player.tier === "Rare" ? 1.02 : 1,
+                        revealed && player.tier === "Epic" ? 1.03 :
+                        revealed && player.tier === "Rare" ? 1.02 : 1,
                     boxShadow:
                         revealed && player.tier === "Legend"
                             ? "0 0 30px 5px rgba(255, 223, 0, 0.7)"
@@ -42,29 +41,29 @@ export default function Card({ player, revealed, onClick, disabled }) {
                     duration: revealed ? 1.2 : 0.8,
                     rotateY: { type: "spring", stiffness: 300, damping: 20 },
                     scale: { type: "spring", stiffness: 300, damping: 12 },
-                    rotateZ: { type: "spring", stiffness: 500, damping: 10 },
                 }}
                 style={{ transformStyle: "preserve-3d" }}
                 onClick={
                     !disabled
                         ? () => {
                             playFlip();
-                            if (player.tier === "Legend") {
-                                playLegendary();
-                            } else if (player.tier === "Epic") {
-                                playEpic();
-                            }
+                            if (player.tier === "Legend") playLegendary();
+                            else if (player.tier === "Epic") playEpic();
                             onClick?.();
                         }
                         : undefined
                 }
             >
 
-                <div className="absolute w-full h-full rounded-2xl bg-gradient-to-br from-gray-900 to-gray-800 border-2 border-white flex items-center justify-center">
+                {/* Front grey card: hidden initially */}
+                <div className={`absolute w-full h-full rounded-2xl bg-gray-700 border-2 flex items-center justify-center backface-hidden ${revealed ? "opacity-100" : "opacity-0"}`}>
                     <span className="text-white font-bold text-3xl"></span>
                 </div>
 
-                <div className={`absolute w-full h-full rounded-2xl backface-hidden bg-gradient-to-br border-2 p-3 text-white ${tierStyles[player.tier]}`}>
+                {/* Back content: rotated 180° */}
+                <div className={`absolute w-full h-full rounded-2xl backface-hidden bg-gradient-to-br border-2 p-3 text-white ${tierStyles[player.tier]}`}
+                     style={{ transform: "rotateY(180deg)" }}
+                >
                     {(player.tier === "Epic" || player.tier === "Legend") && (
                         <div className="absolute inset-0 rounded-2xl blur-2xl opacity-50 bg-yellow-400 z-0" />
                     )}
@@ -120,16 +119,9 @@ export default function Card({ player, revealed, onClick, disabled }) {
                                 </>
                             )}
                         </div>
-
-
-
-
-
-
                     </div>
                 </div>
             </motion.div>
-
         </div>
     );
 }
