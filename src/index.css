@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@keyframes wave-line {
+  0% { background-position: -100% 0; }
+  45% { background-position: 100% 0; }  
+  50% { background-position: 100% 0; }  
+  95% { background-position: -100% 0; } 
+  100% { background-position: -100% 0; } 
+}
+
+.wave-line {
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: wave-line 6s linear infinite;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
